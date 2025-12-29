@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # Database PostgreSQL
   db:
@@ -39,6 +37,9 @@ services:
     restart: unless-stopped
     networks:
       - wiki-network
+    volumes:
+      # Mount SSH keys untuk Git sync (opsional, jika menggunakan SSH)
+      - ${HOME}/.ssh:/home/node/.ssh:ro
 
 volumes:
   wiki-db-data:
