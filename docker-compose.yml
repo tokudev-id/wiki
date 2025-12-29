@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  # Database PostgreSQL
+  db:
+    image: postgres:17-alpine
+    container_name: wiki-db
+    environment:
+      POSTGRES_DB: wiki
+      POSTGRES_USER: wikijs
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-WikiJsUnictive2025!}
+    volumes:
+      - wiki-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - wiki-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wikijs -d wiki"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Wiki.js Application
+  wiki:
+    image: ghcr.io/requarks/wiki:2
+    container_name: wiki-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_TYPE: postgres
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: wikijs
+      DB_PASS: ${DB_PASSWORD:-WikiJsUnictive2025!}
+      DB_NAME: wiki
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - wiki-network
+
+volumes:
+  wiki-db-data:
+    driver: local
+
+networks:
+  wiki-network:
+    driver: bridge
