@@ -33,7 +33,7 @@ services:
       DB_PASS: ${DB_PASSWORD:-WikiJsUnictive2025!}
       DB_NAME: wiki
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3030:3000"
     restart: unless-stopped
     networks:
       - wiki-network
