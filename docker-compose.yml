@@ -20,7 +20,7 @@ services:
 
   # Wiki.js Application
   wiki:
-    image: ghcr.io/requarks/wiki:2
+    image: requarks/wiki:2
     container_name: wiki-app
     depends_on:
       db:
